@@ -1,0 +1,195 @@
+---
+title: "Lab13"
+author: "Marissa Ehringer"
+date: "11/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Call libraries needed
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+# Question 1 - no code needed
+
+# Question 2 - create one-way table and run Chi-square
+```{r}
+# Create a one-way table
+flower <- matrix(c(54,122,58), ncol =3, byrow=TRUE)
+flower <- as.table(flower)
+flower
+# Add column and row names
+colnames(flower) <- c("red","pink","white")
+rownames(flower) <- c("counts")
+flower
+# run the Chi-square test by listing the expected frequencies
+chisq.test(flower, p=c(.25,  .50,  .25))
+```
+# Question 3 - create a two-way table and run Chi-Square
+```{r}
+# create a two-way table
+angina <- matrix(c(44, 19, 116, 128),ncol=2,byrow=TRUE)
+angina <- as.table(angina)
+angina
+# add column and row names
+colnames(angina) <- c("Timolol","Placebo")
+rownames(angina) <- c("No Attacks", "Angina Attacks")
+# run the Chi-square test
+chisq.test(angina)
+
+```
+
+# Import data and recode factor variables
+```{r}
+nicgenes <- read.csv("Lab13_nicgenes.csv")
+nicgenes$SEX <- factor(nicgenes$SEX)
+nicgenes$SEX <- fct_recode(nicgenes$SEX, "female"= "0", "male" = "1")
+nicgenes$TOBEVER <- factor(nicgenes$TOBEVER)
+nicgenes$TOBEVER <- fct_recode(nicgenes$TOBEVER, "yes"="1", "no"="0")
+nicgenes$ALCEVER <- factor(nicgenes$ALCEVER)
+nicgenes$ALCEVER <- fct_recode(nicgenes$ALCEVER, "yes"="1", "no"="0")
+nicgenes$TOB4 <- factor(nicgenes$TOB4)
+nicgenes$TOB4 <- fct_recode(nicgenes$TOB4, "NoTobDep"="1", "TobDep"="3", "TobDepSym"="4")
+nicgenes$ALC4 <- factor(nicgenes$ALC4)
+nicgenes$ALC4 <- fct_recode(nicgenes$ALC4, "NoAlcDep"="1", "AlcAb"="2", "AlcDep"="3", "AlcDepSym"="4")
+nicgenes$subjecttype <- factor(nicgenes$subjecttype)
+nicgenes$subjecttype <- fct_recode(nicgenes$subjecttype, "clinical"="1", "control"="0")
+
+```
+
+# Question 4 - how many clinical subjects
+```{r}
+# insert code here
+summary(nicgenes)
+```
+
+# Question 5 - how many male subjects
+```{r}
+# insert code here
+```
+
+# Question 6 - plot TOBEVER variable by sex
+```{r}
+ggplot(nicgenes) +
+  aes(x = TOBEVER) +
+  geom_bar() +
+  labs(x="Ever used tobacco",
+       y="Number of subjects") +
+  facet_wrap(nicgenes$SEX)
+```
+
+
+# Question 7 - Create a table for sex and tobever
+```{r}
+# insert code here
+
+```
+
+# Question 8 - Use table data to do Chi-square
+```{r}
+# make table
+tbl <-table(nicgenes$TOBEVER, nicgenes$SEX)
+tbl
+chisq.test(tbl)
+
+
+# add column and row names
+
+
+# run the Chi-square test
+
+```
+# Question 9 - perform Chi-square on raw data
+```{r}
+chisq.test(nicgenes$SEX, nicgenes$TOBEVER)
+```
+# Question 10 - Test for association between TOBEVER and ALCEVER
+```{r}
+# insert code here
+tbl2 <-table(nicgenes$TOBEVER, nicgenes$ALCEVER)
+tbl2
+chisq.test(tbl2)
+```
+
+# Question 11 - TOB4 and ALC4
+```{r}
+# insert code here
+
+```
+
+
+
+# Question 12 - Combine TOB4 and ALC4 levels 3 and 4
+```{r}
+nicgenes$TOB4c <- nicgenes$TOB4 %>%
+  fct_recode("NoTobDep" = "NoTobDep",
+             "TobDep" = "TobDep",
+             "TobDepS" = "TobDepSym")
+nicgenes$ALC4c <- nicgenes$ALC4 %>%
+  fct_recode("NoAlcDep" = "NoAlcDep",
+             "AlcAb" = "AlcAb",
+             "AlcDep" = "AlcDep",
+             "AlcDepS" = "AlcDepSym")
+# check that you did it correctly
+table(nicgenes$TOB4c,nicgenes$ALC4c)
+# rerun Chi-square
+
+
+```
+
+# Question 13 - test for association between tobacco ever and all SNPs
+```{r}
+chisq.test(nicgenes$TOBEVER, nicgenes$rs4950)
+chisq.test(nicgenes$TOBEVER, nicgenes$rs684513)
+chisq.test(nicgenes$TOBEVER, nicgenes$rs680244)
+chisq.test(nicgenes$TOBEVER, nicgenes$rs514743)
+chisq.test(nicgenes$TOBEVER, nicgenes$rs8040868)
+chisq.test(nicgenes$TOBEVER, nicgenes$rs11637630)
+chisq.test(nicgenes$TOBEVER, nicgenes$rs1948)
+```
+
+# Question 14 - Test for association between SNPs and TOB4
+```{r}
+chisq.test(nicgenes$TOB4, nicgenes$rs4950)
+chisq.test(nicgenes$TOB4, nicgenes$rs684513)
+chisq.test(nicgenes$TOB4, nicgenes$rs680244)
+chisq.test(nicgenes$TOB4, nicgenes$rs514743)
+chisq.test(nicgenes$TOB4, nicgenes$rs8040868)
+chisq.test(nicgenes$TOB4, nicgenes$rs11637630)
+chisq.test(nicgenes$TOB4, nicgenes$rs1948)
+```
+# Question 15 - no code needed
+
+# Question 16 - no code needed
+```{r}
+dbinom(1,7,0.5)
+```
+# Question 17 - no code needed
+
+# Question 18 - no code needed
+
+# Question 19
+```{r}
+test1 <- chisq.test(nicgenes$TOBEVER, nicgenes$rs4950)$p.value
+test2 <- chisq.test(nicgenes$TOBEVER, nicgenes$rs684513)$p.value
+test3 <- chisq.test(nicgenes$TOBEVER, nicgenes$rs680244)$p.value
+test4 <- chisq.test(nicgenes$TOBEVER, nicgenes$rs514743)$p.value
+test5 <- chisq.test(nicgenes$TOBEVER, nicgenes$rs8040868)$p.value
+test6 <- chisq.test(nicgenes$TOBEVER, nicgenes$rs11637630)$p.value
+test7 <- chisq.test(nicgenes$TOBEVER, nicgenes$rs1948)$p.value
+
+tests <- c(test1, test2, test3, test4, test5, test6, test7)
+
+p.adjust(p=tests, method = "hochberg")
+```
+
+
+
+
+
+
