@@ -1,0 +1,54 @@
+---
+title: "Lab 12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(corrplot)
+install.packages("checkmate")
+```
+
+```{r}
+CCH <- read.csv("ColoradoCountyHealth.csv")
+mylist <- list(nums=c(1:10), fruit=c("apples", "oranges"), df=mtcars)
+str(mylist)
+```
+# Q2
+```{r}
+mylist$df$mpg %>% mean
+```
+
+```{r}
+newCCH <- select(CCH, c(3:13))
+m <- as.matrix(newCCH)
+m <- rcorr(m) 
+str(m)
+m$r
+corrplot(corr = m$r, method='circle')
+```
+
+```{r}
+m$P
+
+scatter <- ggplot(newCCH, aes(x = no_exercise, y = obesity)) + geom_point() + stat_smooth(method="lm", se = FALSE)
+scatter
+```
+
+```{r}
+summary(lm(obesity ~ no_exercise, newCCH))
+summary(lm(obesity ~ no_exercise + few_fruit_veg, CCH))
+```
+
+```{r}
+reg.model1 <- lm(obesity ~ no_exercise + few_fruit_veg, CCH)
+lake.county <- data.frame(no_exercise = 12.1, few_fruit_veg = 86.9)
+predict(object = reg.model1, newdata = lake.county)
+```
+```{r}
+summary(CCH)
+all.county <- data.frame(no_exercise = 19.03, few_fruit_veg = 76.15)
+predict(object = reg.model1, newdata = all.county)
+```
+
