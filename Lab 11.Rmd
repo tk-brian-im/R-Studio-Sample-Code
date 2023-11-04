@@ -1,0 +1,122 @@
+---
+title: "Lab 11 ANOVA"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+MushData <- read.csv("mushrooms.csv")
+tapply(MushData$mood, MushData$drug, sd)
+boxp <- ggplot(MushData, aes(x = drug, y = mood)) + geom_boxplot(fill = "black")
+boxp
+```
+
+```{r}
+anovamood <- aov(mood~drug, data=MushData)
+summary(anovamood)
+tapply(MushData$mood,MushData$drug, sd)
+```
+
+```{r}
+pairwise.t.test(MushData$mood, MushData$drug, p.adjust.method = "bonferroni")
+```
+
+# Q9
+```{r}
+box9 <- ggplot(MushData, aes(x = drug, y = mood)) + geom_bar(stat = "summary", fill = "blue") + geom_errorbar(stat="summary",  
+      fun = mean,  
+      fun.min = function(X)mean(X) - sd(X),
+      fun.max = function(X)mean(X) + sd(X),
+      position=position_dodge(.95), width=0.2)
+box9
+
+
+box9.2 <- ggplot(MushData, aes(x = drug, y = mood)) + geom_bar(stat = "summary", fill = "yellow") + geom_errorbar(stat="summary",  
+      fun = mean,  
+      fun.min = function(X)mean(X) - qnorm(.975)*sd(X) / sqrt(30),
+      fun.max = function(X)mean(X) + qnorm(.975)*sd(X) / sqrt(30),
+      position=position_dodge(.95), width=0.2)
+box9.2
+
+box9.3 <- ggplot(MushData, aes(x = drug, y = mood)) + geom_bar(stat = "summary", fill = "orange") + geom_errorbar(stat="summary",  
+      fun = mean,  
+      fun.min = function(X)mean(X) - sd(X)/sqrt(30),
+      fun.max = function(X)mean(X) + sd(X)/sqrt(30),
+      position=position_dodge(.95), width=0.2)
+box9.3
+box9.2
+box9
+```
+
+```{r}
+anovatrans <- aov(trans~drug, data=MushData)
+summary(anovatrans)
+tapply(MushData$trans,MushData$drug, sd)
+pairwise.t.test(MushData$trans, MushData$drug, p.adjust.method = "bonferroni")
+box10 <- ggplot(MushData, aes(x = drug, y = trans)) + geom_bar(stat = "summary", fill = "blue") + geom_errorbar(stat="summary",  
+      fun = mean,  
+      fun.min = function(X)mean(X) - sd(X),
+      fun.max = function(X)mean(X) + sd(X),
+      position=position_dodge(.95), width=0.2)
+box10
+```
+
+```{r}
+light <- read.csv("Lighting.csv")
+light_l <- pivot_longer(light, cols=c(c1:c4), names_to = "c", values_to = "time")
+
+ezANOVA(data=light_l, dv=time, wid=subject, within=c, detailed=TRUE)
+
+pairwise.t.test(light_l$time, light_l$c, paired=TRUE, p.adjust.method="bonferroni")
+
+
+
+
+boxc <- ggplot(light_l, aes(x = c, y = time)) + geom_bar(stat = "summary", fill = "blue") + geom_errorbar(stat="summary",  
+      fun = mean,  
+      fun.min = function(X)mean(X) - sd(X),
+      fun.max = function(X)mean(X) + sd(X),
+      position=position_dodge(.95), width=0.2)
+boxc
+
+
+boxc.2 <- ggplot(light_l, aes(x = c, y = time)) + geom_bar(stat = "summary", fill = "yellow") + geom_errorbar(stat="summary",  
+      fun = mean,  
+      fun.min = function(X)mean(X) - qnorm(.975)*sd(X) / sqrt(30),
+      fun.max = function(X)mean(X) + qnorm(.975)*sd(X) / sqrt(30),
+      position=position_dodge(.95), width=0.2)
+boxc.2
+
+boxc.3 <- ggplot(light_l, aes(x = c, y = time)) + geom_bar(stat = "summary", fill = "orange") + geom_errorbar(stat="summary",  
+      fun = mean,  
+      fun.min = function(X)mean(X) - sd(X)/sqrt(30),
+      fun.max = function(X)mean(X) + sd(X)/sqrt(30),
+      position=position_dodge(.95), width=0.2)
+boxc.3
+boxc.2
+boxc
+```
+
+
+```{r}
+game <- read.csv("GameShow.csv")
+game_l <- pivot_longer(game, cols=c(stick:grub), names_to = "food", values_to = "time")
+
+ezANOVA(data=game_l, dv=time, wid=subject, within=food, detailed=TRUE)
+
+pairwise.t.test(game_l$time, game_l$food, paired=TRUE, p.adjust.method="bonferroni")
+
+
+boxg <- ggplot(game_l, aes(x = food, y = time)) + geom_bar(stat = "summary", fill = "blue") + geom_errorbar(stat="summary",  
+      fun = mean,  
+      fun.min = function(X)mean(X) - sd(X),
+      fun.max = function(X)mean(X) + sd(X),
+      position=position_dodge(.95), width=0.2)
+boxg
+```
