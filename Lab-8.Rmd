@@ -1,0 +1,233 @@
+---
+title: "Lab 8 Central Limit Theorem"
+author: "YOUR NAME HERE"
+date: "TODAY'S DATE HERE"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+# **PART 1: Import Data & Descriptive Statistics**
+### Chunk 1 - R Markdown settings (No output)
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+```
+
+### Chunk 2 - Descriptive Statistics
+```{r}
+rm(list=ls())
+TCdata <- read.csv("NHANESCholesterol.csv")
+summary(TCdata$TC)
+sd(TCdata$TC)
+```
+
+# **PART 2: Histogram of Total Cholesterol for Population=7846**
+### Chunk 3 - p1 Histogram (all participants)
+```{r}
+p1 <- ggplot(TCdata, aes(TC)) + 
+  geom_histogram(binwidth=6, color='gray40', fill='bisque') +
+  xlim(100,300) +
+  labs(x="Total Cholesterol of NHANES Participants", y="frequency")
+p1
+```
+
+
+
+# **PART 3: Sampling Distribution for n=2**
+### Chunk 4: Create a dataframe with 5000 samples, n=2 each
+```{r}
+# Creat a data.frame with 5000 variables, 2 observations each, all NA's 
+n2data <- matrix(NA, ncol=5000, nrow=2)
+n2data <- as.data.frame(n2data)
+
+# Replace the NA values with random values from TCdata
+for(i in 1:5000){
+  n2data[,i] <- TCdata[sample(nrow(TCdata), 2, replace=T),]
+}
+
+# Stack the n = 2 samples (wide to long conversion)
+n2data <- pivot_longer(data=n2data, names_to = "sample", values_to = "TC", cols=1:5000) 
+
+# The above code pivots the two rows of observations from columns 1 through 5000 of the n2data data frame.The values are stacked into a column called "TC" and are indexed by another new column called "sample" that contains the column names from the previous version of the n2data data frame. Because we didn't create unique names for all 5000 samples, R automatically named the columns V1, V2, V3..., etc. Because we won't need the wide format of n2data, we save over it with the long version created with the pivot_longer command.
+```
+
+### Chunk 5: Create dataframe with means for each n=2 sample
+```{r}
+means <- tapply(n2data$TC, INDEX=n2data$sample, FUN=mean)   # creating a means vector
+n2means <- as.data.frame(means)                             # storing means in dataframe
+n2means$Sample.Size <- replicate(5000,"n=2")                # adding a Sample Size variable
+rownames(n2means) <- NULL                                   # removing the rownames
+rm(means)                                                   # removing the means vector
+```
+
+### Chunk 6: p2 Histogram (5000 sample means,n=2)
+```{r}
+p2 <- ggplot(n2means, aes(means)) +
+  geom_histogram(binwidth=5, color='gray40', fill='red') +
+  xlim(100, 300)+
+  labs(x='5000 means (n=2)')
+p2
+```
+
+
+# **PART 4: Sampling Distribution for n=4**
+### Chunk 7: Create a dataframe with 5000 samples, each with n=4
+```{r}
+n4data <- matrix(NA, ncol=5000, nrow=4)
+n4data <- as.data.frame(n4data)
+for(i in 1:5000){
+  n4data[,i] <- TCdata[sample(nrow(TCdata), 4, replace=T),]
+}
+n4data <- pivot_longer(data=n4data, names_to = "sample", values_to = "TC", cols =  1:5000)
+```
+
+
+### Chunk 8: Calculate means for each n=4 sample
+```{r}
+means <- tapply(n4data$TC, INDEX=n4data$sample, FUN=mean)
+n4means <- as.data.frame(means)
+n4means$Sample.Size <- replicate(5000,"n=4")                     
+rownames(n4means) <- NULL 
+rm(means)
+```
+
+### Chunk 9: p3 histogram (5000 sample means, n=4)
+```{r}
+p3 <- ggplot(n4means, aes(means)) +
+  geom_histogram(binwidth=3.6, color='gray40', fill='orange') +
+  xlim(100,300) +
+  labs(x='5000 means (n=4)')
+p3
+```
+
+
+# **PART 5: Finish the Code (Sampling Distribution for n=10)**
+### Chunk 10: Create a dataframe with 5000 samples, each with n=10
+```{r, echo=FALSE}
+n10data <- matrix(NA, ncol=7846, nrow=10)
+n10data <- as.data.frame(n10data)
+for(i in 1:7846){
+    n10data[,i] <- TCdata[sample(nrow(TCdata), 10, replace=T),]
+}
+n10long <- pivot_longer(n10data, names_to = "sample", values_to = "TC", cols = 1:7846)
+# WRITE THE PIVOT_LONGER COMMAND HERE
+```
+
+### Chunk 11: Calculate means for each n = 10 sample
+```{r, echo=FALSE}
+means <- tapply(n10long$TC, INDEX=n10long$sample, FUN=mean)
+n10means <- as.data.frame(means)
+n10means$Sample.Size <- replicate(7846,"n=10")                     
+rownames(n10means) <- NULL
+rm(means)
+summary(n10means)
+sd(n10means$mean)
+
+```
+
+### Chunk 12: p4 Histogram (5000 sample means, n=10)
+```{r, echo=FALSE}
+p4 <- ggplot(n10means, aes(means)) +
+  geom_histogram(binwidth=3.6, color='gray40', fill='orange') +
+  xlim(100,300) +
+  labs(x='5000 means (n=4)')
+p4
+```
+
+
+<!-- # **PART 6: Sampling Distribution of n=30** -->
+<!-- ### Chunk 13: Create a dataframe with 5000 samples, each with n=30 -->
+```{r, echo=FALSE}
+n30data <- matrix(NA, ncol=5000, nrow=30)
+n30data <- as.data.frame(n30data)
+for(i in 1:5000){
+    n30data[,i] <- TCdata[sample(nrow(TCdata), 30, replace=T),]
+}
+n30data <- pivot_longer(data = n30data, names_to="sample", values_to="TC", cols=1:5000)
+```
+
+<!-- ### Chunk 14: Calculate means for each n = 30 sample -->
+```{r, echo=FALSE}
+means <- tapply(n30data$TC, INDEX=n30data$sample, FUN=mean)
+n30means <- as.data.frame(means)
+n30means$Sample.Size <- replicate(5000,"n=30")                     
+rownames(n30means) <- NULL
+rm(means)
+```
+
+<!-- ### Chunk 15: p5 Histogram (5000 sample means, n=30) -->
+```{r, echo=FALSE}
+p5 <- ggplot(n30means, aes(means)) +
+  geom_histogram(binwidth=1.3, color='gray30', fill='lightgreen')+
+  xlim(100, 300)+
+  labs(x='5000 means (n=30)')
+p5
+```
+
+<!-- ### Chunk 16: p5.1 Same histogram as p5, but with narrow x-limits -->
+```{r}
+p5.1 <- ggplot(n30means, aes(means)) +
+  geom_histogram(binwidth=1.3, color='gray30', fill='lightgreen')+
+  xlim(150, 225)+
+  labs(x='5000 means (n=30), narrow x-limits')
+p5.1
+```
+
+<!-- # Plot 6 Histograms in a Grid. -->
+<!-- ### Chunk 17 -->
+```{r}
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, p5, p5.1, ncol = 2)  
+```
+
+
+<!-- # **PART 7: Sampling Distribution for n=7844 (20,000 Sample Means)** -->
+<!-- ### Chunk 18: Create a dataframe with 20000 samples of n=7844 each -->
+```{r, echo=FALSE}
+n7844data <- matrix(NA, ncol=10000, nrow=7846)
+n7844data <- as.data.frame(n7844data)
+for(i in 1:10000){
+  n7844data[,i] <- TCdata[sample(nrow(TCdata), 7846, replace=T),]
+}
+n7844data <- pivot_longer(data=n7844data, names_to="sample", values_to="TC", cols=1:10000)
+sd()
+```
+
+
+<!-- ### Chunk 19: Calculate means for each n=7844 sample -->
+```{r, echo=FALSE}
+means <- tapply(n7844data$TC, INDEX=n7844data$sample, FUN=mean)
+n7844means <- as.data.frame(means)
+n7844means$Sample.Size <- replicate(20000,"n=7844")                     # adding a Sample Size variable
+rownames(n7844means) <- NULL                                        # removing the meaningless rownames
+rm(means)
+```
+
+<!-- ### Chunk 20: p6 Histogram (20,000 samples, n=7844) -->
+```{r, echo=FALSE}
+p6 <- ggplot(n7844means, aes(means)) +
+  geom_histogram(binwidth= 0.1, color='gray20', fill='blue')+
+  xlim(100, 300)+
+  labs(x='20000 means (n=7844)')
+p6
+```
+
+<!-- ### Chunk 21: p7 Histogram (20,000 samples, n=7846, narrow x-axis limits) -->
+```{r, echo=FALSE}
+p6.1 <- ggplot(n7844means, aes(means)) +
+  geom_histogram(binwidth= 0.1, color='gray20', fill='blue')+
+  xlim(183,188)+
+  labs(x='20000 means (n=7844, narrow x-limits)')
+p6.1
+```
+
+<!-- # **PART 8: Plotting all 8 Histograms in a Grid** -->
+<!-- ### Chunk 22 -->
+```{r}
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, p5, p5.1, p6, p6.1, ncol = 2)
+```
+

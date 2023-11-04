@@ -1,0 +1,80 @@
+---
+title: "Lab_7"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Q1
+```{r}
+pnorm(q = -1.959964)
+qnorm(p = .005)
+```
+# Q2
+```{r}
+#Part 1 Two Methods
+qnorm(p=.10, mean=185, sd=15, lower.tail= TRUE)
+qnorm(p=.90,  mean=185, sd=15, lower.tail=FALSE)
+
+#Part 2 
+pnorm(q=205, mean=185, sd=15, lower.tail = FALSE)
+```
+# Q3
+```{r}
+pnorm(q=200, mean=185.6, sd=41.4, lower.tail = FALSE)
+```
+# Q4
+```{r}
+pnorm(q=150, mean=185.6, sd=41.4, lower.tail = TRUE)
+```
+# Q5
+```{r}
+pnorm(q=200, mean=185.6, sd=41.4)
+pnorm(q=150, mean=185.6, sd=41.4)
+```
+# Q6
+```{r}
+qnorm(p=.10,  mean=185.6, sd=41.4)
+```
+# Q7
+```{r}
+dbinom(x=50, size=99, prob=.5)
+pbinom(q=10, size=20, prob=.5, lower.tail=TRUE)
+qbinom(p=0.4, size=30, prob=.6)
+pbinom(q=17, size=30, prob=.6, lower.tail=TRUE)
+```
+# Q8
+```{r}
+dbinom(x=3,size=5,prob=.4)
+```
+# Q9
+```{r}
+pbinom(q=2,size=5,prob=0.4,lower.tail=FALSE)
+```
+# Q10
+```{r}
+dbinom(x=5,size=5,prob=.4)
+```
+
+# Q11
+```{r}
+pbinom(q=12, size=50, prob=.4)
+```
+# Q14
+```{r}
+dpois(x=2,lambda = (4.6/12)*3)
+```
+# Q15
+```{r}
+ppois(q=3, lambda=(4.6/12)*3, lower.tail = FALSE)
+```
+
+
+
+
+
+
+
+

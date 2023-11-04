@@ -1,0 +1,188 @@
+---
+title: "Untitled"
+author: "Brian Kim"
+date: "10/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# ALZHEIMER'S RISK
+```{r}
+# Clear the Environment tab
+rm(list=ls())
+
+# Complete the 6 expressions below to identify known probabilities and their complements
+pr.1st = 0.049
+pr.not1st = 1 - pr.1st
+pr.2nd = 0.023
+pr.not2nd = 1 - pr.2nd
+pr.3rd = 0.078
+pr.not3rd = 1 - pr.3rd
+
+# Run the command below AFTER completing the 6 expressions above.
+cat("P(1st) = ", pr.1st, "\n",
+    "P(not 1st) = ", pr.not1st, "\n","\n",
+    "P(2nd) = ", pr.2nd, "\n",
+    "P(not 2nd) = ", pr.not2nd, "\n","\n",
+    "P(3rd) = ", pr.3rd, "\n",
+    "P(not 3rd) = ", pr.not3rd, "\n","\n",
+    sep="")
+```
+
+## Q1 - No additional code needed
+After completing and running the setup chunk, the value for pr.2nd should be listed in your Environment tab.
+
+## Q2 - No Code needed
+
+## Q3. Probability all 3 have AD?
+```{r}
+# find prob.all3
+prob.all3 = 0.049 * 0.023 * 0.078
+
+cat("P(all3) =", prob.all3)
+```
+
+## Q4. Probability at least 1 of the 2 women has AD?
+```{r}
+# Hint: Find pr.none and use complementary probabilities to find pr.atleast1
+pr.nofad = pr.not2nd * pr.not3rd
+pr.atleast1 = 1 - pr.nofad
+
+cat("P(>= 1 female with AD)=", pr.atleast1)
+```
+
+## Q5. No code needed
+
+# Flu Epidemic Setup
+```{r}
+# Clear environment
+rm(list = ls())
+
+# Known and complementary probabilities
+pr.mom = .10
+pr.notmom = 1 - pr.mom
+pr.dad = .20
+pr.notdad =  1 - pr.dad
+pr.both = .04
+pr.notmom_or_notdad = (pr.notmom + pr.notdad) - (pr.notmom * pr.notdad)
+
+# Print known and complementary probabilities
+cat("P(mom) = ", pr.mom, "\n",
+    "P(not mom) = ", pr.notmom, "\n","\n",
+    "P(dad) = ", pr.dad, "\n",
+    "P(not dad) = ", pr.notdad, "\n","\n",
+    "P(both parents) = ", pr.both, "\n",
+    sep = "")
+```
+
+
+## Q6. Probability of mom having flu given dad has flu?
+```{r}
+pr.mom_given_dad = (pr.mom*pr.dad)/pr.mom
+cat("P(mom given dad)=", pr.mom_given_dad)
+```
+
+## Q7 & Q8 - No code needed
+
+## Q9
+```{r}
+or = pr.mom + pr.dad - pr.both
+or
+```
+
+
+## Q10 & Q11. No code needed
+
+# PSA Test Setup
+```{r}
+# Clear environment
+rm(list = ls())
+
+# Participant Characteristics
+n = 2950
+cancer = 449
+healthy = 2950 - 449
+
+# Original test results
+pos_4.0 = 0
+neg_4.0 = 2950
+tpos_4.0 = 0
+fpos_4.0 = 0
+fneg_4.0 = 449
+tneg_4.0 = 2501
+
+# Test Metrics
+sensitivity_4.0 = tpos_4.0 / cancer
+specitivity_4.0 = tneg_4.0 / healthy
+ppv_4.0 = tpos_4.0 / pos_4.0
+npv_4.0 = tneg_4.0 / neg_4.0
+```
+
+
+## Q12. What is the initial NPV?
+```{r}
+cat("NPV =", npv_4.0)
+```
+
+## Q13. No code needed.
+
+## Q14. Percentage with an initial false negative diagnosis?
+```{r}
+q14percent = (fneg_4.0 / neg_4.0) * 100
+cat("Percent of negatives that are false negatives = ", 
+    q14percent, "%", sep="")
+```
+
+## Q15. Using a 0.6 cutoff, what percentage of true positives do we expect among those with cancer, and false positives among healthy men?
+```{r}
+sensitivity_0.6 = 0.93
+percent_tpos_0.6 = 0.93 * 100
+specificity_0.6 = 0.02
+percent_fpos_0.6 = (1 - 0.02) * 100
+ 
+
+cat("True positive rate = ", 
+    percent_tpos_0.6, "%", 
+    sep="", "\n")
+cat("False positive rate = ", 
+    percent_fpos_0.6, "%", 
+    sep="")
+```
+
+## Q16. How many false negatives with a 1.1 cutoff?
+```{r}
+tpos1.1 = 449 * 0.75
+fneg_1.1 = 449 - tpos1.1
+
+cat("false negatives =", fneg_1.1)
+```
+
+# Q17. How many false positives with a 1.1 cutoff?
+```{r}
+tneg1.1 = 0.33 * 2501
+fpos_1.1 = 2501 - tneg1.1
+
+cat("false positives =", fpos_1.1)
+```
+
+## Q18
+```{r}
+ppv_1.1 = (449 * 0.75)/(fpos_1.1+tpos1.1)
+npv_1.1 = (2501 * 0.33)/(tneg1.1 + fneg_1.1)
+
+
+
+cat("PPV for a 1.1 cutoff =", ppv_1.1, "\n")
+cat("NPV for a 1.1 cutoff =", npv_1.1)
+```
+
+## Q19 - You may use the below to work through the answer options. You may find some of the information already exist in your Environment tab.
+```{r}
+
+```
+
+## Q20 - no code needed
